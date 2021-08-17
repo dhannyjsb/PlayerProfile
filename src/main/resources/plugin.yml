@@ -5,3 +5,7 @@ api-version: 1.17
 authors: [ dhannyjsb ]
 description: Show other player profile
 website: https://github.com/dhannyjsb
+commands:
+  playerprofile:
+    description: Main command
+    usage: /playerprofile <command>
