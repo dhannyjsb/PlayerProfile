@@ -1,0 +1,7 @@
+name: PlayerProfile
+version: '${project.version}'
+main: com.github.dhannyjsb.playerprofile.Main
+api-version: 1.17
+authors: [ dhannyjsb ]
+description: Show other player profile
+website: https://github.com/dhannyjsb
