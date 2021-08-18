@@ -11,7 +11,7 @@ import java.io.File;
 import java.sql.SQLException;
 
 public class SetupDatabases {
-    private final ConnectionSource connectionSource;
+    private ConnectionSource connectionSource;
     // Database connection stuff
 
     // Data Mappers

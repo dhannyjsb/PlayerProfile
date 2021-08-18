@@ -3,8 +3,10 @@ package com.github.dhannyjsb.playerprofile;
 import com.github.dhannyjsb.playerprofile.command.MainCommand;
 import com.github.dhannyjsb.playerprofile.command.TabComplete;
 import com.github.dhannyjsb.playerprofile.databases.SetupDatabases;
-import com.github.dhannyjsb.playerprofile.listener.OnRightClick;
+import com.github.dhannyjsb.playerprofile.listener.PlayerJoin;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.logger.Level;
+import com.j256.ormlite.logger.Logger;
 import com.j256.ormlite.support.ConnectionSource;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,21 +15,24 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 public final class Main extends JavaPlugin {
     private static Main instance;
+    boolean debug = false;
 
-    private ConnectionSource connectionSource;
+    private static  ConnectionSource connectionSource;
 
     // Set instance for this plugin
     public static Main getInstance() {
         return instance;
     }
-
+    public static ConnectionSource getDatabaseMain() {
+        return connectionSource;
+    }
     @Override
     public void onEnable() {
+        Logger.setGlobalLogLevel(debug ? Level.TRACE : Level.OFF);
         instance = this;
         // Plugin startup logic
         saveDefaultConfig();
@@ -52,7 +57,7 @@ public final class Main extends JavaPlugin {
         Objects.requireNonNull(getCommand("playerprofile")).setExecutor(new MainCommand(this));
         Objects.requireNonNull(getCommand("playerprofile")).setTabCompleter(new TabComplete());
         // register listener
-        new OnRightClick(this);
+        new PlayerJoin(this);
     }
 
     @Override
