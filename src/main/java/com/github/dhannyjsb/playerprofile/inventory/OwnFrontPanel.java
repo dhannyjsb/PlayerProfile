@@ -121,7 +121,7 @@ public class OwnFrontPanel {
         if (ownSettingsMeta != null) {
             ownSettingsMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Profile Settings");
             List<String> loreFriend = new ArrayList<>();
-            loreFriend.add(ChatColor.GOLD + "Total Friend : " + ChatColor.AQUA + "Not Implement yet");
+            loreFriend.add(ChatColor.GOLD + "Total Friend : " + ChatColor.AQUA + "Open Player Profile Setting");
             ownSettingsMeta.setLore(loreFriend);
 
         }

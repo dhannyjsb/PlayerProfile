@@ -84,5 +84,9 @@ public class UserDB {
         return desc_show;
     }
 
+    public Integer getEquipment_show() {
+        return equipment_show;
+    }
+
 
 }

@@ -1,7 +1,11 @@
 package com.github.dhannyjsb.playerprofile.databases;
 
 import com.github.dhannyjsb.playerprofile.Main;
+import com.github.dhannyjsb.playerprofile.inventory.SettingPanel;
+import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -67,16 +71,74 @@ public class getDatabase {
         }
     }
 
+
+    public String checkSettingEquip(Player player) {
+        Integer description = checkSettingEquipINT(player);
+        if (description == 1) {
+            return ChatColor.GREEN + "Public";
+        }
+        if (description == 2) {
+            return ChatColor.AQUA + "Friend";
+        }
+        if (description == 3) {
+            return ChatColor.RED + "Private";
+        }
+        return null;
+    }
+
+    public Integer checkSettingEquipINT(Player player) {
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            //
+        }
+        assert query != null;
+        return query.getEquipment_show();
+    }
+
+    public void setEquipSetting(Player player) {
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            //
+        }
+        Integer currentSettings =  checkSettingEquipINT(player);
+        assert query != null;
+        if (currentSettings == 3){
+            query.setEquipment_show(1);
+        }else {
+            query.setEquipment_show(currentSettings + 1);
+        }
+        try {
+            new SetupDatabases().HandlerUserDB().createOrUpdate(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public String checkSettingDesc(Player player) {
         Integer description = checkSettingDescINT(player);
         if (description == 1) {
-            return "Public";
+            return ChatColor.GREEN + "Public";
         }
         if (description == 2) {
-            return "Friend";
+            return ChatColor.AQUA + "Friend";
         }
         if (description == 3) {
-            return "Private";
+            return ChatColor.RED + "Private";
         }
         return null;
     }
@@ -95,5 +157,32 @@ public class getDatabase {
         }
         assert query != null;
         return query.getDesc_show();
+    }
+
+    public void setDescSetting(Player player) {
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            //
+        }
+        Integer currentSettings =  checkSettingDescINT(player);
+        assert query != null;
+        if (currentSettings == 3){
+            query.setDesc_show(1);
+        }else {
+            query.setDesc_show(currentSettings + 1);
+        }
+        try {
+            new SetupDatabases().HandlerUserDB().createOrUpdate(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,43 +1,30 @@
 package com.github.dhannyjsb.playerprofile.inventory;
 
-import com.github.dhannyjsb.playerprofile.databases.SetupDatabases;
 import com.github.dhannyjsb.playerprofile.databases.getDatabase;
-import com.github.stefvanschie.inventoryframework.font.util.Font;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
-import com.github.stefvanschie.inventoryframework.pane.component.Label;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class SettingPanel {
 
     public void playerSettingsPanel(ChestGui gui, Player player, StaticPane settingsPage, PaginatedPane pane) {
 
-        ItemStack desc = new ItemStack(Material.BOOK);
-        ItemMeta descMeta = desc.getItemMeta();
-        if (descMeta != null) {
-            descMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Player Desc");
-            List<String> loreDesc = new ArrayList<>();
-            loreDesc.add(ChatColor.GOLD + "Status : " + ChatColor.AQUA + new getDatabase().checkSettingDesc(player));
-            descMeta.setLore(loreDesc);
-        }
-        desc.setItemMeta(descMeta);
+        desc(player, settingsPage, gui);
+        equip(player, settingsPage, gui);
 
-        settingsPage.addItem(new GuiItem(new ItemStack(desc), event -> event.getWhoClicked()), 2, 1);
-
-        settingsPage.addItem(new GuiItem(new ItemStack(Material.BARRIER), event -> event.setCancelled(true)), 3, 1);
         settingsPage.addItem(new GuiItem(new ItemStack(Material.BARRIER), event -> event.setCancelled(true)), 4, 1);
         settingsPage.addItem(new GuiItem(new ItemStack(Material.BARRIER), event -> event.setCancelled(true)), 5, 1);
         settingsPage.addItem(new GuiItem(new ItemStack(Material.BARRIER), event -> event.setCancelled(true)), 6, 1);
@@ -53,6 +40,57 @@ public class SettingPanel {
 
 
     }
+
+    public void equip(Player player, StaticPane settingsPage, ChestGui gui){
+        ItemStack equipment = new ItemStack(Material.IRON_CHESTPLATE);
+        ItemMeta equipmentMeta = equipment.getItemMeta();
+        if (equipmentMeta != null) {
+            equipmentMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Player Equipment");
+            List<String> loreDesc = new ArrayList<>();
+            loreDesc.add(ChatColor.GOLD + "Status : " + ChatColor.AQUA + new getDatabase().checkSettingEquip(player));
+            equipmentMeta.setLore(loreDesc);
+        }
+        equipment.setItemMeta(equipmentMeta);
+
+        settingsPage.addItem(new GuiItem(equipment, event -> {
+            new getDatabase().setEquipSetting(player);
+            if (equipmentMeta != null) {
+                equipmentMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Player Equipment");
+                List<String> loreDesc = new ArrayList<>();
+                loreDesc.add(ChatColor.GOLD + "Status : " + ChatColor.AQUA + new getDatabase().checkSettingEquip(player));
+                equipmentMeta.setLore(loreDesc);
+            }
+            equipment.setItemMeta(equipmentMeta);
+            gui.update();
+        }), 3, 1);
+    }
+
+public void desc(Player player, StaticPane settingsPage, ChestGui gui){
+    ItemStack desc = new ItemStack(Material.BOOK);
+    ItemMeta descMeta = desc.getItemMeta();
+    if (descMeta != null) {
+        descMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Player Desc");
+        List<String> loreDesc = new ArrayList<>();
+        loreDesc.add(ChatColor.GOLD + "Status : " + ChatColor.AQUA + new getDatabase().checkSettingDesc(player));
+        descMeta.setLore(loreDesc);
+    }
+    desc.setItemMeta(descMeta);
+
+    settingsPage.addItem(new GuiItem(desc, event -> {
+        new getDatabase().setDescSetting(player);
+        if (descMeta != null) {
+            descMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Player Desc");
+            List<String> loreDesc = new ArrayList<>();
+            loreDesc.add(ChatColor.GOLD + "Status : " + ChatColor.AQUA + new getDatabase().checkSettingDesc(player));
+            descMeta.setLore(loreDesc);
+        }
+        desc.setItemMeta(descMeta);
+        gui.update();
+    }), 2, 1);
+}
+
+
+
 
     public void getBackgroundFront(ChestGui gui, PaginatedPane pane) {
         OutlinePane backgroundSettings = new OutlinePane(0, 0, 9, 5, Pane.Priority.LOWEST);
