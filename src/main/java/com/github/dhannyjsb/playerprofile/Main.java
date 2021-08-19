@@ -32,7 +32,9 @@ public final class Main extends JavaPlugin {
     }
     @Override
     public void onEnable() {
-        Logger.setGlobalLogLevel(debug ? Level.TRACE : Level.OFF);
+        //Logger.setGlobalLogLevel(debug ? Level.TRACE : Level.OFF);
+        Logger.setGlobalLogLevel(Level.TRACE);
+
         instance = this;
         // Plugin startup logic
         saveDefaultConfig();
@@ -48,10 +50,10 @@ public final class Main extends JavaPlugin {
         // Setup Databases
         setupAllDatabase();
         // Create table
-        new SetupDatabases(connectionSource).setupUserDB();
-        new SetupDatabases(connectionSource).setupFriendDB();
-        new SetupDatabases(connectionSource).setupMailDB();
-        new SetupDatabases(connectionSource).setupAllTables();
+        new SetupDatabases().setupUserDB(connectionSource);
+        new SetupDatabases().setupFriendDB(connectionSource);
+        new SetupDatabases().setupMailDB(connectionSource);
+        new SetupDatabases().setupAllTables(connectionSource);
 
         // register command
         Objects.requireNonNull(getCommand("playerprofile")).setExecutor(new MainCommand(this));

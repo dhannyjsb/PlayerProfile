@@ -21,7 +21,7 @@ public class PlayerJoin implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event){
         Player player = event.getPlayer();
         player.sendMessage("nanti disini check database, apakah player sudah ada datanya atau tidak");
-        new getDatabase(this.plugin).checkPlayerData(player);
+        new getDatabase().checkPlayerData(player);
     }
 
 }

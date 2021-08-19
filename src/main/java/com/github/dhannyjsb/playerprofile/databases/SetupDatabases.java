@@ -1,46 +1,42 @@
 package com.github.dhannyjsb.playerprofile.databases;
 
-import com.github.dhannyjsb.playerprofile.Main;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
-import java.io.File;
 import java.sql.SQLException;
 
 public class SetupDatabases {
-    private ConnectionSource connectionSource;
     // Database connection stuff
 
     // Data Mappers
-    private Dao<UserDB, Integer> UserDBMapper;
-    private Dao<FriendDB, Integer> FriendDBMapper;
-    private Dao<MailDB, Integer> MailDBMapper;
+    private static Dao<UserDB, Integer> UserDBMapper;
+    private static Dao<FriendDB, Integer> FriendDBMapper;
+    private static Dao<MailDB, Integer> MailDBMapper;
 
-    public SetupDatabases(ConnectionSource connectionSource) {
-        this.connectionSource = connectionSource;
-    }
+
 
     // Data Dao Mappers
     public Dao<UserDB, Integer> HandlerUserDB() {
-        return this.UserDBMapper;
+        return UserDBMapper;
     }
 
     public Dao<FriendDB, Integer> HandlerFriendDB() {
-        return this.FriendDBMapper;
+        return FriendDBMapper;
     }
 
     public Dao<MailDB, Integer> HandlerMailDB() {
-        return this.MailDBMapper;
+        return MailDBMapper;
     }
 
 
 
 
 
-    public void setupUserDB() {
+    public void setupUserDB(ConnectionSource connectionSource) {
         UserDBMapper = null;
         try {
             UserDBMapper = DaoManager.createDao(connectionSource, UserDB.class);
@@ -49,7 +45,7 @@ public class SetupDatabases {
         }
     }
 
-    public void setupFriendDB() {
+    public void setupFriendDB(ConnectionSource connectionSource) {
         FriendDBMapper = null;
         try {
             FriendDBMapper = DaoManager.createDao(connectionSource, FriendDB.class);
@@ -58,7 +54,7 @@ public class SetupDatabases {
         }
     }
 
-    public void setupMailDB() {
+    public void setupMailDB(ConnectionSource connectionSource) {
         MailDBMapper = null;
         try {
             MailDBMapper = DaoManager.createDao(connectionSource, MailDB.class);
@@ -67,7 +63,7 @@ public class SetupDatabases {
         }
     }
 
-    public void setupAllTables() {
+    public void setupAllTables(ConnectionSource connectionSource) {
         try {
             TableUtils.createTableIfNotExists(connectionSource, UserDB.class);
         } catch (SQLException e) {

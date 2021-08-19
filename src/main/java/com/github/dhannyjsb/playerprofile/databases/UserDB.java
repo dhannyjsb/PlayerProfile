@@ -3,7 +3,9 @@ package com.github.dhannyjsb.playerprofile.databases;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-@DatabaseTable(tableName = "UsersDB")
+import java.sql.Timestamp;
+
+@DatabaseTable(tableName = "UserDB")
 public class UserDB {
     @DatabaseField(generatedId = true)
     protected Integer id;
@@ -30,6 +32,12 @@ public class UserDB {
     protected Integer allow_mail;
 
     @DatabaseField()
+    protected Integer is_online;
+
+    @DatabaseField()
+    protected Timestamp logout_time;
+
+    @DatabaseField()
     protected Boolean allow_friend_add;
 
     public void setUuid(String uuid) {
@@ -40,7 +48,7 @@ public class UserDB {
         this.player_name = player_name;
     }
 
-    public void setPlayer_first_join(long player_first_join) {
+    public void setPlayer_first_join(Long player_first_join) {
         this.player_first_join = player_first_join;
     }
 
@@ -60,8 +68,20 @@ public class UserDB {
         this.allow_mail = allow_mail;
     }
 
+    public void setIs_online(Integer is_online) {
+        this.is_online = is_online;
+    }
+
+    public void setLogout_time(Timestamp logout_time) {
+        this.logout_time = logout_time;
+    }
+
     public void setAllow_friend_add(Boolean allow_friend_add) {
         this.allow_friend_add = allow_friend_add;
+    }
+
+    public Integer getDesc_show() {
+        return desc_show;
     }
 
 
