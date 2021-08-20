@@ -44,6 +44,7 @@ public class UserDB {
         this.uuid = uuid;
     }
 
+
     public void setPlayer_name(String player_name) {
         this.player_name = player_name;
     }
@@ -88,5 +89,10 @@ public class UserDB {
         return equipment_show;
     }
 
-
+    public Integer getAllow_mail() {
+        return allow_mail;
+    }
+    public Boolean getAllow_friend_add() {
+        return allow_friend_add;
+    }
 }

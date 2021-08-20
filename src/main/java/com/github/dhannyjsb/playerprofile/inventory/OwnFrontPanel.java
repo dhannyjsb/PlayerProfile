@@ -121,7 +121,7 @@ public class OwnFrontPanel {
         if (ownSettingsMeta != null) {
             ownSettingsMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Profile Settings");
             List<String> loreFriend = new ArrayList<>();
-            loreFriend.add(ChatColor.GOLD + "Total Friend : " + ChatColor.AQUA + "Open Player Profile Setting");
+            loreFriend.add(ChatColor.AQUA + "Open Player Profile Setting");
             ownSettingsMeta.setLore(loreFriend);
 
         }
@@ -140,7 +140,7 @@ public class OwnFrontPanel {
         if (mailBoxMeta != null) {
             mailBoxMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Mail Box");
             List<String> loreFriend = new ArrayList<>();
-            loreFriend.add(ChatColor.GOLD + "Total Friend : " + ChatColor.AQUA + "Not Implement yet");
+            loreFriend.add(ChatColor.AQUA + "Not Implement yet");
             mailBoxMeta.setLore(loreFriend);
 
         }
@@ -173,7 +173,6 @@ public class OwnFrontPanel {
                     + ChatColor.DARK_PURPLE + z);
             lorePlayer.add(ChatColor.GOLD + "Health : " + player.getHealth());
             lorePlayer.add(ChatColor.GOLD + "Food : " + player.getFoodLevel());
-            lorePlayer.add(ChatColor.GOLD + "Total Playtime : " + player.getPlayerTime());
             playerProfileItemMeta.setLore(lorePlayer);
         }
         playerProfile.setItemMeta(playerProfileItemMeta);

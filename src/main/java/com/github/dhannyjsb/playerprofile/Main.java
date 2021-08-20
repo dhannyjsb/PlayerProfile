@@ -4,6 +4,7 @@ import com.github.dhannyjsb.playerprofile.command.MainCommand;
 import com.github.dhannyjsb.playerprofile.command.TabComplete;
 import com.github.dhannyjsb.playerprofile.databases.SetupDatabases;
 import com.github.dhannyjsb.playerprofile.listener.PlayerJoin;
+import com.github.dhannyjsb.playerprofile.listener.PlayerLeft;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.logger.Level;
 import com.j256.ormlite.logger.Logger;
@@ -60,6 +61,7 @@ public final class Main extends JavaPlugin {
         Objects.requireNonNull(getCommand("playerprofile")).setTabCompleter(new TabComplete());
         // register listener
         new PlayerJoin(this);
+        new PlayerLeft(this);
     }
 
     @Override

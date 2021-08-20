@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 
-public class getDatabase {
+public class MethodeDatabaseUser {
 
     protected Main plugin;
 
@@ -36,6 +36,13 @@ public class getDatabase {
         }
         if (query == null) {
             newPlayer(player);
+        }
+        assert query != null;
+        query.setIs_online(1);
+        try {
+            new SetupDatabases().HandlerUserDB().createOrUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -66,6 +73,127 @@ public class getDatabase {
         query.setAllow_friend_add(true);
         try {
             new SetupDatabases().HandlerUserDB().create(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setLogout(Player player) {
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+        } catch (SQLException e) {
+            //
+        }
+        if (query == null) {
+            query = new UserDB();
+        }
+        query.setIs_online(0);
+        try {
+            new SetupDatabases().HandlerUserDB().createOrUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setFriendSetting(Player player) {
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            //
+        }
+        Boolean currentSettings =  checkSettingFriendBoolean(player);
+        assert query != null;
+        query.setAllow_friend_add(!currentSettings);
+        try {
+            new SetupDatabases().HandlerUserDB().createOrUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String checkSettingFriend(Player player) {
+        Boolean description = checkSettingFriendBoolean(player);
+        return description ? ChatColor.GREEN + "Allow" : ChatColor.GREEN + "Deny";
+    }
+
+    public Boolean checkSettingFriendBoolean(Player player) {
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            //
+        }
+        assert query != null;
+        return query.getAllow_friend_add();
+    }
+
+    public String checkSettingMail(Player player) {
+        Integer description = checkSettingMailINT(player);
+        if (description == 1) {
+            return ChatColor.GREEN + "Public";
+        }
+        if (description == 2) {
+            return ChatColor.AQUA + "Friend";
+        }
+        if (description == 3) {
+            return ChatColor.RED + "Private";
+        }
+        return null;
+    }
+
+    public Integer checkSettingMailINT(Player player) {
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            //
+        }
+        assert query != null;
+        return query.getAllow_mail();
+    }
+
+    public void setMailSetting(Player player) {
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            //
+        }
+        Integer currentSettings =  checkSettingMailINT(player);
+        assert query != null;
+        if (currentSettings == 3){
+            query.setAllow_mail(1);
+        }else {
+            query.setAllow_mail(currentSettings + 1);
+        }
+        try {
+            new SetupDatabases().HandlerUserDB().createOrUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
         }
