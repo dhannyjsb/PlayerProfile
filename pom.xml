@@ -110,6 +110,10 @@
             <artifactId>ConfigUpdater</artifactId>
             <version>1.2-SNAPSHOT</version>
         </dependency>
-
+        <dependency>
+            <groupId>xyz.upperlevel.spigot.book</groupId>
+            <artifactId>spigot-book-api</artifactId>
+            <version>1.5</version>
+        </dependency>
     </dependencies>
 </project>

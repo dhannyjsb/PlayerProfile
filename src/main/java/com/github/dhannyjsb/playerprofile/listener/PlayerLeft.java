@@ -2,7 +2,6 @@ package com.github.dhannyjsb.playerprofile.listener;
 
 import com.github.dhannyjsb.playerprofile.Main;
 import com.github.dhannyjsb.playerprofile.databases.MethodeDatabaseUser;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

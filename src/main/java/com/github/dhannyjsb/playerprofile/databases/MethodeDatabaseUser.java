@@ -6,6 +6,7 @@ import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.graalvm.compiler.lir.amd64.vector.AMD64VectorMove;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -15,6 +16,7 @@ import java.util.Date;
 public class MethodeDatabaseUser {
 
     protected Main plugin;
+    private String test;
 
     public Timestamp getDateNow() {
         Date date = new Date();
@@ -98,6 +100,61 @@ public class MethodeDatabaseUser {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public String  getPlayerName(Player player) {
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            //
+        }
+        assert query != null;
+        return query.getPlayer_name();
+    }
+
+    public void setDescription(Player player, String desc) {
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            //
+        }
+        assert query != null;
+        query.setPlayer_desc(desc);
+
+        try {
+            new SetupDatabases().HandlerUserDB().createOrUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public String  getDescriptionPage1(Player player){
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            //
+        }
+        assert query != null;
+        return query.getPlayer_description();
     }
 
     public void setFriendSetting(Player player) {

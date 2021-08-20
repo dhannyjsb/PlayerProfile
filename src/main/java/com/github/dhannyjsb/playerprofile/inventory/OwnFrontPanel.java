@@ -1,17 +1,22 @@
 package com.github.dhannyjsb.playerprofile.inventory;
 
+import com.github.dhannyjsb.playerprofile.databases.MethodeDatabaseUser;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
 import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
 import com.github.stefvanschie.inventoryframework.pane.Pane;
 import com.github.stefvanschie.inventoryframework.pane.StaticPane;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.upperlevel.spigot.book.BookUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +113,8 @@ public class OwnFrontPanel {
         getFriendList(frontPage);
         // Mailbox
         getMailbox(frontPage);
+
+        getDesc(frontPage);
         // Settings
         getSettings(frontPage, pane, gui);
         // Empty line
@@ -195,8 +202,23 @@ public class OwnFrontPanel {
 
     }
 
+
+    public void getDesc(StaticPane frontPage) {
+        ItemStack friendList = new ItemStack(Material.COBWEB);
+        ItemMeta friendListMeta = friendList.getItemMeta();
+        if (friendListMeta != null) {
+            friendListMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Player Description");
+            List<String> loreFriend = new ArrayList<>();
+            loreFriend.add(ChatColor.AQUA + "Open Player Description");
+            friendListMeta.setLore(loreFriend);
+
+        }
+        friendList.setItemMeta(friendListMeta);
+        frontPage.addItem(new GuiItem(new ItemStack(friendList), event -> getBook((Player) event.getWhoClicked())), 4, 2);
+
+    }
+
     public void getKosong(StaticPane frontPage) {
-        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 4, 2);
         frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 5, 2);
         frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 6, 2);
         frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 7, 2);
@@ -204,6 +226,78 @@ public class OwnFrontPanel {
         frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 5, 3);
         frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 6, 3);
         frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 7, 3);
+    }
+
+
+    public void getBook(Player player) {
+        int lenght = new MethodeDatabaseUser().getDescriptionPage1(player).length();
+        Bukkit.getLogger().severe(String.valueOf(lenght));
+        if (lenght < 254) {
+
+            ItemStack book = BookUtil.writtenBook()
+                    .author("SnowyCoder")
+                    .title("The Test-ament")
+                    .pages(
+                            new BaseComponent[]{
+                                    new TextComponent("         Welcome")
+                            },
+                            new BookUtil.PageBuilder()
+                                    .add(new TextComponent(new MethodeDatabaseUser().getDescriptionPage1(player).substring(0, lenght)))
+
+                                    .build()
+                    )
+                    .build();
+
+            BookUtil.openPlayer(player, book);
+        }
+        if (lenght > 254 && lenght < 500) {
+
+            ItemStack book = BookUtil.writtenBook()
+                    .author("SnowyCoder")
+                    .title("The Test-ament")
+                    .pages(
+                            new BaseComponent[]{
+                                    new TextComponent("         Welcome")
+                            },
+                            new BookUtil.PageBuilder()
+                                    .add(new TextComponent(new MethodeDatabaseUser().getDescriptionPage1(player).substring(0, 254)))
+
+                                    .build(),
+                            new BookUtil.PageBuilder()
+                                    .add(new TextComponent(new MethodeDatabaseUser().getDescriptionPage1(player).substring(255, lenght)))
+
+                                    .build()
+                    )
+                    .build();
+
+            BookUtil.openPlayer(player, book);
+        }
+        if (lenght > 500 && lenght < 750) {
+            ItemStack book = BookUtil.writtenBook()
+                    .author("SnowyCoder")
+                    .title("The Test-ament")
+                    .pages(
+                            new BaseComponent[]{
+                                    new TextComponent(" Profile of "  + new MethodeDatabaseUser().getPlayerName(player))
+                            },
+                            new BookUtil.PageBuilder()
+                                    .add(new TextComponent(new MethodeDatabaseUser().getDescriptionPage1(player).substring(0, 254).replace("&", "§")))
+
+                                    .build(),
+                            new BookUtil.PageBuilder()
+                                    .add(new TextComponent(new MethodeDatabaseUser().getDescriptionPage1(player).substring(255, 500).replace("&", "§")))
+
+                                    .build()
+                            ,
+                            new BookUtil.PageBuilder()
+                                    .add(new TextComponent(new MethodeDatabaseUser().getDescriptionPage1(player).substring(501, lenght).replace("&", "§")))
+
+                                    .build()
+                    )
+                    .build();
+
+            BookUtil.openPlayer(player, book);
+        }
     }
 }
 

@@ -84,6 +84,9 @@ public class UserDB {
     public Integer getDesc_show() {
         return desc_show;
     }
+    public String getPlayer_name() {
+        return player_name;
+    }
 
     public Integer getEquipment_show() {
         return equipment_show;
@@ -92,7 +95,14 @@ public class UserDB {
     public Integer getAllow_mail() {
         return allow_mail;
     }
+
     public Boolean getAllow_friend_add() {
         return allow_friend_add;
     }
+
+
+    public String getPlayer_description() {
+        return player_desc;
+    }
+
 }

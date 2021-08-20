@@ -1,5 +1,6 @@
 package com.github.dhannyjsb.playerprofile.inventory;
 
+import com.github.dhannyjsb.playerprofile.Main;
 import com.github.dhannyjsb.playerprofile.databases.MethodeDatabaseUser;
 import com.github.dhannyjsb.playerprofile.listener.ChatInput;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
@@ -11,17 +12,14 @@ import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.util.Consumer;
 
 import java.util.*;
 
 public class SettingPanel {
 
-    private ChatInput chatInput = new ChatInput();
+    private final ChatInput chatInput = new ChatInput(Main.getInstance());
 
     public void playerSettingsPanel(ChestGui gui, Player player, StaticPane settingsPage, PaginatedPane pane) {
 
@@ -56,9 +54,8 @@ public class SettingPanel {
 
         settingsPage.addItem(new GuiItem(friends, event -> {
             event.getWhoClicked().closeInventory();
-            player.sendMessage("Please input you description");
-            player.sendMessage("Please type a description, or type cancel");
-            chatInput.settings.put(player.getUniqueId(),ChatColor.stripColor("description"));
+            player.sendMessage( ChatColor.GOLD + "Please type a description, or type @cancel and @done if you finish");
+            chatInput.settings.put(player.getUniqueId(),ChatColor.stripColor(":description"));
 
         }), 6, 1);
     }

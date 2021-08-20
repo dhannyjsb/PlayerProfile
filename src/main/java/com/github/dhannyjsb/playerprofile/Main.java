@@ -3,6 +3,7 @@ package com.github.dhannyjsb.playerprofile;
 import com.github.dhannyjsb.playerprofile.command.MainCommand;
 import com.github.dhannyjsb.playerprofile.command.TabComplete;
 import com.github.dhannyjsb.playerprofile.databases.SetupDatabases;
+import com.github.dhannyjsb.playerprofile.listener.ChatInput;
 import com.github.dhannyjsb.playerprofile.listener.PlayerJoin;
 import com.github.dhannyjsb.playerprofile.listener.PlayerLeft;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -62,6 +63,7 @@ public final class Main extends JavaPlugin {
         // register listener
         new PlayerJoin(this);
         new PlayerLeft(this);
+        new ChatInput(this);
     }
 
     @Override
