@@ -1,12 +1,9 @@
 package com.github.dhannyjsb.playerprofile.databases;
 
 import com.github.dhannyjsb.playerprofile.Main;
-import com.github.dhannyjsb.playerprofile.inventory.SettingPanel;
-import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.graalvm.compiler.lir.amd64.vector.AMD64VectorMove;
+
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -15,8 +12,6 @@ import java.util.Date;
 
 public class MethodeDatabaseUser {
 
-    protected Main plugin;
-    private String test;
 
     public Timestamp getDateNow() {
         Date date = new Date();
@@ -363,6 +358,65 @@ public class MethodeDatabaseUser {
             query.setDesc_show(1);
         }else {
             query.setDesc_show(currentSettings + 1);
+        }
+        try {
+            new SetupDatabases().HandlerUserDB().createOrUpdate(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    public String checkSettingStatus(Player player) {
+        Integer description = checkSettingStatusINT(player);
+        if (description == 1) {
+            return ChatColor.GREEN + "Public";
+        }
+        if (description == 2) {
+            return ChatColor.AQUA + "Friend";
+        }
+        if (description == 3) {
+            return ChatColor.RED + "Private";
+        }
+        return null;
+    }
+
+    public Integer checkSettingStatusINT(Player player) {
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            //
+        }
+        assert query != null;
+        return query.getStatus();
+    }
+
+    public void setStatusSetting(Player player) {
+        UserDB query = null;
+        try {
+            query = new SetupDatabases().HandlerUserDB()
+                    .queryBuilder()
+                    .where()
+                    .eq("uuid", player.getUniqueId().toString())
+                    .queryForFirst();
+
+        } catch (SQLException e) {
+            //
+        }
+        Integer currentSettings =  checkSettingStatusINT(player);
+        assert query != null;
+        if (currentSettings == 3){
+            query.setStatus(1);
+        }else {
+            query.setStatus(currentSettings + 1);
         }
         try {
             new SetupDatabases().HandlerUserDB().createOrUpdate(query);

@@ -1,5 +1,6 @@
 package com.github.dhannyjsb.playerprofile.inventory;
 
+import com.github.dhannyjsb.playerprofile.databases.MethodeDatabaseFriend;
 import com.github.dhannyjsb.playerprofile.databases.MethodeDatabaseUser;
 import com.github.stefvanschie.inventoryframework.gui.GuiItem;
 import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
@@ -28,12 +29,30 @@ public class OtherPlayerPanel {
     public void frontPanel(ChestGui gui, Player player, StaticPane frontPage, Player caster) {
 
         getBackgroundFront(gui);
-        getEquipment(gui, player, frontPage);
+
+        getEquipmentBySettings(gui, player, caster, frontPage);
+
         getOtherProfile(gui, player, frontPage, caster);
 
         closeButton(gui, frontPage);
 
 
+    }
+
+    private void getEquipmentBySettings(ChestGui gui, Player player, Player caster, StaticPane frontPage) {
+        if (new MethodeDatabaseUser().checkSettingEquipINT(player) == 1) {
+            getEquipment(gui, player, frontPage);
+        }
+        if (new MethodeDatabaseUser().checkSettingEquipINT(player) == 2) {
+            if (new MethodeDatabaseFriend().checkFriendShip(caster, player)) {
+                getEquipment(gui, player, frontPage);
+            } else {
+                getNullEquipment(gui, frontPage);
+            }
+        }
+        if (new MethodeDatabaseUser().checkSettingEquipINT(player) == 3) {
+            getNullEquipment(gui, frontPage);
+        }
     }
 
     public void getBackgroundFront(ChestGui gui) {
@@ -49,6 +68,7 @@ public class OtherPlayerPanel {
         background.setRepeat(true);
         gui.addPane(background);
     }
+
 
     public void getEquipment(ChestGui gui, Player player, StaticPane frontPage) {
         ItemStack helm = player.getInventory().getHelmet();
@@ -88,6 +108,32 @@ public class OtherPlayerPanel {
         frontPage.addItem(new GuiItem(new ItemStack(boots), event -> event.setCancelled(true)), 1, 4);
     }
 
+    public void getNullEquipment(ChestGui gui, StaticPane frontPage) {
+        ItemStack nulled = new ItemStack(Material.BARRIER);
+        ItemMeta nulledMeta = nulled.getItemMeta();
+        if (nulledMeta != null) {
+            nulledMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "PRIVATE");
+            List<String> loreFriend = new ArrayList<>();
+            loreFriend.add(ChatColor.AQUA + "Private Profile");
+            nulledMeta.setLore(loreFriend);
+
+        }
+        nulled.setItemMeta(nulledMeta);
+
+        // Helm
+        frontPage.addItem(new GuiItem(new ItemStack(nulled), event -> event.setCancelled(true)), 1, 1);
+        // Armor
+        frontPage.addItem(new GuiItem(new ItemStack(nulled), event -> event.setCancelled(true)), 1, 2);
+        // Right hand
+        frontPage.addItem(new GuiItem(new ItemStack(nulled), event -> event.setCancelled(true)), 0, 2);
+        // Left hand
+        frontPage.addItem(new GuiItem(new ItemStack(nulled), event -> event.setCancelled(true)), 2, 2);
+        // Leggings
+        frontPage.addItem(new GuiItem(new ItemStack(nulled), event -> event.setCancelled(true)), 1, 3);
+        // Boots
+        frontPage.addItem(new GuiItem(new ItemStack(nulled), event -> event.setCancelled(true)), 1, 4);
+    }
+
     public void closeButton(ChestGui gui, StaticPane frontPage) {
         ItemStack close = new ItemStack(Material.BARRIER);
         ItemMeta closeMeta = close.getItemMeta();
@@ -100,10 +146,9 @@ public class OtherPlayerPanel {
 
     public void getOtherProfile(ChestGui gui, Player player, StaticPane frontPage, Player caster) {
 
-        // Add Pane
-        StaticPane settings = new StaticPane(4, 1, 9, 5);
+
         // Profile
-        getOtherProfile(frontPage, player);
+        getStatusProfileBySettings(frontPage, player, caster);
         // Friend list
         getDesc(frontPage, player, gui, caster);
         // Settings
@@ -112,7 +157,53 @@ public class OtherPlayerPanel {
         // Add Pane Settings
     }
 
-    public void getOtherProfile(StaticPane frontPage, Player player) {
+    private void getStatusProfileBySettings(StaticPane frontPage, Player player, Player caster) {
+        if (new MethodeDatabaseUser().checkSettingStatusINT(player) == 1) {
+            getStatusProfile(frontPage, player);
+        }
+        if (new MethodeDatabaseUser().checkSettingStatusINT(player) == 2) {
+            if (new MethodeDatabaseFriend().checkFriendShip(caster, player)) {
+                getStatusProfile(frontPage, player);
+            } else {
+                getStatusProfileNull(frontPage, player);
+            }
+        }
+        if (new MethodeDatabaseUser().checkSettingStatusINT(player) == 3) {
+            getStatusProfileNull(frontPage, player);
+        }
+    }
+
+    public void getStatusProfileNull(StaticPane frontPage, Player player) {
+        ItemStack playerProfile = new ItemStack(Material.OAK_SIGN);
+        ItemMeta playerProfileItemMeta = playerProfile.getItemMeta();
+        String x = "Private";
+        String y = "Private";
+        String z = "Private";
+        String playerWorld = "Private";
+        if (playerProfileItemMeta != null) {
+            playerProfileItemMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Status");
+            List<String> lorePlayer = new ArrayList<>();
+            lorePlayer.add(ChatColor.GOLD + "Name : " + ChatColor.AQUA + "Private");
+            lorePlayer.add(ChatColor.GOLD + "IP : " + ChatColor.AQUA + "Private");
+            lorePlayer.add(ChatColor.GOLD + "Level : " + ChatColor.AQUA + "Private");
+            lorePlayer.add(ChatColor.GOLD + "Location : "
+                    + ChatColor.AQUA + playerWorld
+                    + ChatColor.GOLD + " X: "
+                    + ChatColor.DARK_PURPLE + x
+                    + ChatColor.GOLD + " Y: "
+                    + ChatColor.DARK_PURPLE + y
+                    + ChatColor.GOLD + " Z: "
+                    + ChatColor.DARK_PURPLE + z);
+            lorePlayer.add(ChatColor.GOLD + "Health : " + "Private");
+            lorePlayer.add(ChatColor.GOLD + "Food : " + "Private");
+            playerProfileItemMeta.setLore(lorePlayer);
+        }
+        playerProfile.setItemMeta(playerProfileItemMeta);
+        frontPage.addItem(new GuiItem(new ItemStack(playerProfile), event -> event.setCancelled(true)), 4, 1);
+
+    }
+
+    public void getStatusProfile(StaticPane frontPage, Player player) {
         ItemStack playerProfile = new ItemStack(Material.OAK_SIGN);
         ItemMeta playerProfileItemMeta = playerProfile.getItemMeta();
         int x = player.getLocation().getBlockX();

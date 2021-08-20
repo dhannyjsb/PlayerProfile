@@ -19,11 +19,15 @@ public class UserDB {
     @DatabaseField()
     protected Long player_first_join;
 
+
     @DatabaseField()
     protected String player_desc;
 
     @DatabaseField()// Integer artinya 1-3 = 1. Public 2. Friend 3. Disable
     protected Integer desc_show;
+
+    @DatabaseField()
+    protected Integer status;
 
     @DatabaseField()
     protected Integer equipment_show;
@@ -84,6 +88,9 @@ public class UserDB {
     public Integer getDesc_show() {
         return desc_show;
     }
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
     public String getPlayer_name() {
         return player_name;
     }
@@ -105,4 +112,8 @@ public class UserDB {
         return player_desc;
     }
 
+
+    public Integer getStatus() {
+        return status;
+    }
 }

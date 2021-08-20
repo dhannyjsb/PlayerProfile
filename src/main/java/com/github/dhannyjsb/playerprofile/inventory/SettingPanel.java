@@ -24,13 +24,13 @@ public class SettingPanel {
     public void playerSettingsPanel(ChestGui gui, Player player, StaticPane settingsPage, PaginatedPane pane) {
 
         desc(player, settingsPage, gui);
+        status(player, settingsPage, gui);
         equip(player, settingsPage, gui);
         mail(player, settingsPage, gui);
         friend(player, settingsPage, gui);
         setDesc(player, settingsPage, gui);
 
 
-        settingsPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 2, 2);
         settingsPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 3, 2);
         settingsPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 4, 2);
         settingsPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 5, 2);
@@ -157,6 +157,30 @@ public class SettingPanel {
             desc.setItemMeta(descMeta);
             gui.update();
         }), 2, 1);
+    }
+
+    public void status(Player player, StaticPane settingsPage, ChestGui gui) {
+        ItemStack status = new ItemStack(Material.BOOK);
+        ItemMeta descMeta = status.getItemMeta();
+        if (descMeta != null) {
+            descMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Player Status");
+            List<String> loreDesc = new ArrayList<>();
+            loreDesc.add(ChatColor.GOLD + "Status : " + ChatColor.AQUA + new MethodeDatabaseUser().checkSettingStatus(player));
+            descMeta.setLore(loreDesc);
+        }
+        status.setItemMeta(descMeta);
+
+        settingsPage.addItem(new GuiItem(status, event -> {
+            new MethodeDatabaseUser().setStatusSetting(player);
+            if (descMeta != null) {
+                descMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Player Status");
+                List<String> loreDesc = new ArrayList<>();
+                loreDesc.add(ChatColor.GOLD + "Status : " + ChatColor.AQUA + new MethodeDatabaseUser().checkSettingStatus(player));
+                descMeta.setLore(loreDesc);
+            }
+            status.setItemMeta(descMeta);
+            gui.update();
+        }), 2, 2);
     }
 
     public void getBackgroundFront(ChestGui gui, PaginatedPane pane) {
