@@ -43,7 +43,7 @@ public class SettingPanel {
     }
 
     public void setDesc(Player player, StaticPane settingsPage, ChestGui gui) {
-        ItemStack friends = new ItemStack(Material.ROSE_BUSH    );
+        ItemStack friends = new ItemStack(Material.ROSE_BUSH);
         ItemMeta friendsMeta = friends.getItemMeta();
         if (friendsMeta != null) {
             friendsMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Set Description");
@@ -54,14 +54,17 @@ public class SettingPanel {
 
         settingsPage.addItem(new GuiItem(friends, event -> {
             event.getWhoClicked().closeInventory();
-            player.sendMessage( ChatColor.GOLD + "Please type a description, or type @cancel and @done if you finish");
-            chatInput.settings.put(player.getUniqueId(),ChatColor.stripColor(":description"));
+            player.sendMessage(ChatColor.GOLD + "Please type a description, or type " + ChatColor.DARK_AQUA + "@cancel "
+                    + ChatColor.GOLD + " and "
+                    + ChatColor.DARK_AQUA + "@done " + ChatColor.GOLD + " or "
+                    + ChatColor.DARK_AQUA + "@n " + ChatColor.GOLD + "for new line");
+            chatInput.settings.put(player.getUniqueId(), ChatColor.stripColor(":description"));
 
         }), 6, 1);
     }
 
     public void friend(Player player, StaticPane settingsPage, ChestGui gui) {
-        ItemStack friends = new ItemStack(Material.ROSE_BUSH    );
+        ItemStack friends = new ItemStack(Material.ROSE_BUSH);
         ItemMeta friendsMeta = friends.getItemMeta();
         if (friendsMeta != null) {
             friendsMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Friend Setting");
@@ -184,7 +187,6 @@ public class SettingPanel {
             gui.update();
         }), 8, 4);
     }
-
 
 
 }

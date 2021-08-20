@@ -32,5 +32,23 @@ public class PlayerInventory {
 
     }
 
+    public void openOtherInventory(Player player, Player target) {
+        ChestGui gui = new ChestGui(5, target.getDisplayName() + " Profile");
+        StaticPane frontPage = new StaticPane(0, 0, 9, 5);
+
+        // Front Panel
+        new OtherPlayerPanel().frontPanel(gui, target, frontPage, player);
+
+
+        gui.addPane(frontPage);
+
+
+
+
+        gui.setOnBottomClick(event -> event.setCancelled(true));
+        gui.show(player);
+
+    }
+
 
 }

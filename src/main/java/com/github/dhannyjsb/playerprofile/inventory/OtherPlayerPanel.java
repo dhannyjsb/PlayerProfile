@@ -14,7 +14,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.upperlevel.spigot.book.BookUtil;
 
@@ -23,34 +22,21 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class OwnFrontPanel {
+public class OtherPlayerPanel {
 
-    public void frontPanel(ChestGui gui, Player player, StaticPane frontPage, PaginatedPane pane) {
 
-        getBackgroundFront(gui, pane);
-        // Equipment
+    public void frontPanel(ChestGui gui, Player player, StaticPane frontPage, Player caster) {
+
+        getBackgroundFront(gui);
         getEquipment(gui, player, frontPage);
-        // Settings
-        getOwnProfile(gui, player, frontPage, pane);
-        // CLose button
+        getOtherProfile(gui, player, frontPage, caster);
+
         closeButton(gui, frontPage);
-        // Event
 
 
     }
 
-    public void closeButton(ChestGui gui, StaticPane frontPage) {
-        ItemStack close = new ItemStack(Material.BARRIER);
-        ItemMeta closeMeta = close.getItemMeta();
-        if (closeMeta != null) {
-            closeMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Close");
-        }
-        close.setItemMeta(closeMeta);
-        frontPage.addItem(new GuiItem(new ItemStack(close), event -> event.getWhoClicked().closeInventory()), 8, 4);
-    }
-
-
-    public void getBackgroundFront(ChestGui gui, PaginatedPane pane) {
+    public void getBackgroundFront(ChestGui gui) {
         OutlinePane background = new OutlinePane(0, 0, 9, 5, Pane.Priority.LOWEST);
         ItemStack backgroundItem = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta backgroundItemMeta = backgroundItem.getItemMeta();
@@ -61,9 +47,8 @@ public class OwnFrontPanel {
         //Background
         background.addItem(new GuiItem(new ItemStack(backgroundItem), event -> event.setCancelled(true)));
         background.setRepeat(true);
-        pane.addPane(0, background);
+        gui.addPane(background);
     }
-
 
     public void getEquipment(ChestGui gui, Player player, StaticPane frontPage) {
         ItemStack helm = player.getInventory().getHelmet();
@@ -103,60 +88,31 @@ public class OwnFrontPanel {
         frontPage.addItem(new GuiItem(new ItemStack(boots), event -> event.setCancelled(true)), 1, 4);
     }
 
-    public void getOwnProfile(ChestGui gui, Player player, StaticPane frontPage, PaginatedPane pane) {
+    public void closeButton(ChestGui gui, StaticPane frontPage) {
+        ItemStack close = new ItemStack(Material.BARRIER);
+        ItemMeta closeMeta = close.getItemMeta();
+        if (closeMeta != null) {
+            closeMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Close");
+        }
+        close.setItemMeta(closeMeta);
+        frontPage.addItem(new GuiItem(new ItemStack(close), event -> event.getWhoClicked().closeInventory()), 8, 4);
+    }
 
+    public void getOtherProfile(ChestGui gui, Player player, StaticPane frontPage, Player caster) {
 
+        // Add Pane
+        StaticPane settings = new StaticPane(4, 1, 9, 5);
         // Profile
-        getPlayerOwnProfile(frontPage, player);
+        getOtherProfile(frontPage, player);
         // Friend list
-        getFriendList(frontPage);
-        // Mailbox
-        getMailbox(frontPage);
-
-        getDesc(frontPage);
+        getDesc(frontPage, player, gui, caster);
         // Settings
-        getSettings(frontPage, pane, gui);
         // Empty line
         getKosong(frontPage);
         // Add Pane Settings
     }
 
-    private void getSettings(StaticPane frontPage, PaginatedPane pane, ChestGui gui) {
-        ItemStack ownSettings = new ItemStack(Material.ANVIL);
-        ItemMeta ownSettingsMeta = ownSettings.getItemMeta();
-        if (ownSettingsMeta != null) {
-            ownSettingsMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Profile Settings");
-            List<String> loreFriend = new ArrayList<>();
-            loreFriend.add(ChatColor.AQUA + "Open Player Profile Setting");
-            ownSettingsMeta.setLore(loreFriend);
-
-        }
-        ownSettings.setItemMeta(ownSettingsMeta);
-        //frontPage.addItem(new GuiItem(new ItemStack(ownSettings), event -> event.setCancelled(true)), 7, 1);
-        frontPage.addItem(new GuiItem(new ItemStack(ownSettings), event -> {
-            pane.setPage(1);
-            gui.update();
-        }), 7, 1);
-    }
-
-
-    private void getMailbox(StaticPane frontPage) {
-        ItemStack mailBox = new ItemStack(Material.JUKEBOX);
-        ItemMeta mailBoxMeta = mailBox.getItemMeta();
-        if (mailBoxMeta != null) {
-            mailBoxMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Mail Box");
-            List<String> loreFriend = new ArrayList<>();
-            loreFriend.add(ChatColor.AQUA + "Not Implement yet");
-            mailBoxMeta.setLore(loreFriend);
-
-        }
-        mailBox.setItemMeta(mailBoxMeta);
-        frontPage.addItem(new GuiItem(new ItemStack(mailBox), event -> event.setCancelled(true)), 6, 1);
-
-    }
-
-
-    public void getPlayerOwnProfile(StaticPane frontPage, Player player) {
+    public void getOtherProfile(StaticPane frontPage, Player player) {
         ItemStack playerProfile = new ItemStack(Material.OAK_SIGN);
         ItemMeta playerProfileItemMeta = playerProfile.getItemMeta();
         int x = player.getLocation().getBlockX();
@@ -186,23 +142,7 @@ public class OwnFrontPanel {
 
     }
 
-    public void getFriendList(StaticPane frontPage) {
-        ItemStack friendList = new ItemStack(Material.COBWEB);
-        ItemMeta friendListMeta = friendList.getItemMeta();
-        if (friendListMeta != null) {
-            friendListMeta.setDisplayName(ChatColor.BOLD + "" + ChatColor.LIGHT_PURPLE + "Friend List");
-            List<String> loreFriend = new ArrayList<>();
-            loreFriend.add(ChatColor.GOLD + "Total Friend : " + ChatColor.AQUA + "Not Implement yet");
-            friendListMeta.setLore(loreFriend);
-
-        }
-        friendList.setItemMeta(friendListMeta);
-        frontPage.addItem(new GuiItem(new ItemStack(friendList), event -> event.setCancelled(true)), 5, 1);
-
-    }
-
-
-    public void getDesc(StaticPane frontPage) {
+    public void getDesc(StaticPane frontPage, Player player, ChestGui gui, Player caster) {
         ItemStack friendList = new ItemStack(Material.BOOK);
         ItemMeta friendListMeta = friendList.getItemMeta();
         if (friendListMeta != null) {
@@ -213,22 +153,13 @@ public class OwnFrontPanel {
 
         }
         friendList.setItemMeta(friendListMeta);
-        frontPage.addItem(new GuiItem(new ItemStack(friendList), event -> getBook((Player) event.getWhoClicked())), 4, 2);
+        // frontPage.addItem(new GuiItem(new ItemStack(friendList), getBook(player), 4, 2);
+        frontPage.addItem(new GuiItem(friendList, event -> getBook(player, caster)), 5, 1);
 
     }
 
-    public void getKosong(StaticPane frontPage) {
-        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 5, 2);
-        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 6, 2);
-        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 7, 2);
-        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 4, 3);
-        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 5, 3);
-        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 6, 3);
-        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 7, 3);
-    }
+    public void getBook(Player player, Player caster) {
 
-
-    public void getBook(Player player) {
         int lenght = new MethodeDatabaseUser().getDescriptionPage1(player).length();
         if (lenght < 254) {
 
@@ -246,7 +177,7 @@ public class OwnFrontPanel {
                     )
                     .build();
 
-            BookUtil.openPlayer(player, book);
+            BookUtil.openPlayer(caster, book);
         }
         if (lenght > 254 && lenght < 500) {
 
@@ -268,7 +199,7 @@ public class OwnFrontPanel {
                     )
                     .build();
 
-            BookUtil.openPlayer(player, book);
+            BookUtil.openPlayer(caster, book);
         }
         if (lenght > 500 && lenght < 750) {
             ItemStack book = BookUtil.writtenBook()
@@ -294,8 +225,19 @@ public class OwnFrontPanel {
                     )
                     .build();
 
-            BookUtil.openPlayer(player, book);
+            BookUtil.openPlayer(caster, book);
         }
     }
-}
 
+    public void getKosong(StaticPane frontPage) {
+        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 4, 2);
+        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 5, 2);
+        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 6, 2);
+        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 7, 2);
+        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 4, 3);
+        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 5, 3);
+        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 6, 3);
+        frontPage.addItem(new GuiItem(new ItemStack(Material.AIR), event -> event.setCancelled(true)), 7, 3);
+    }
+
+}

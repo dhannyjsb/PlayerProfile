@@ -2,19 +2,12 @@ package com.github.dhannyjsb.playerprofile.command;
 
 import com.github.dhannyjsb.playerprofile.Main;
 import com.github.dhannyjsb.playerprofile.inventory.PlayerInventory;
-import com.github.stefvanschie.inventoryframework.gui.GuiItem;
-import com.github.stefvanschie.inventoryframework.gui.type.ChestGui;
-import com.github.stefvanschie.inventoryframework.pane.OutlinePane;
-import com.github.stefvanschie.inventoryframework.pane.PaginatedPane;
-import com.github.stefvanschie.inventoryframework.pane.Pane;
-import com.github.stefvanschie.inventoryframework.pane.StaticPane;
 
-import org.bukkit.Material;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+
 
 public class MainCommand implements CommandExecutor {
 
@@ -26,14 +19,28 @@ public class MainCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, org.bukkit.command.Command command, String s, String[] arg) {
-        if (arg.length >= 1) {
-            if (arg[0].equalsIgnoreCase("open")) {
-                Player player = (Player) commandSender;
-                new PlayerInventory().openPlayerInventory(player);
+
+        Player player = (Player) commandSender;
+        if (arg.length == 0) {
+            new PlayerInventory().openPlayerInventory(player);
+            return true;
+        } else {
+            //Player typed something more
+            Player target = Bukkit.getPlayer(arg[0]);
+            if (target == null) {
+                //Target is not online
+                player.sendMessage("Your target " + arg[0] + " is not online!");
+            } else {
+                if(player == target){
+                    new PlayerInventory().openPlayerInventory(player);
+                    return true;
+                }
+                //Targets online
+                new PlayerInventory().openOtherInventory(player, target);
+
             }
         }
-
         return true;
-    }
 
+    }
 }

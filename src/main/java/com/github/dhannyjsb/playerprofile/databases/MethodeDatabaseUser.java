@@ -38,14 +38,15 @@ public class MethodeDatabaseUser {
         }
         if (query == null) {
             newPlayer(player);
+        }else{
+            query.setIs_online(1);
+            try {
+                new SetupDatabases().HandlerUserDB().createOrUpdate(query);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        assert query != null;
-        query.setIs_online(1);
-        try {
-            new SetupDatabases().HandlerUserDB().createOrUpdate(query);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public void newPlayer(Player player) {
@@ -154,7 +155,7 @@ public class MethodeDatabaseUser {
             //
         }
         assert query != null;
-        return query.getPlayer_description();
+        return query.getPlayer_description().replace("&", "§").replaceAll("@n", "\n");
     }
 
     public void setFriendSetting(Player player) {
