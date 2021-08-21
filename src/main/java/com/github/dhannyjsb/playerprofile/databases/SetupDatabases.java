@@ -4,8 +4,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+
 
 import java.sql.SQLException;
 
@@ -16,6 +15,7 @@ public class SetupDatabases {
     private static Dao<UserDB, Integer> UserDBMapper;
     private static Dao<FriendDB, Integer> FriendDBMapper;
     private static Dao<MailDB, Integer> MailDBMapper;
+    private static Dao<RequestFriendDB, Integer>RequestFriendDBMapper;
 
 
 
@@ -32,6 +32,9 @@ public class SetupDatabases {
         return MailDBMapper;
     }
 
+    public Dao<RequestFriendDB, Integer> HandlerRequestFriendDB() {
+        return RequestFriendDBMapper;
+    }
 
 
 
@@ -63,6 +66,15 @@ public class SetupDatabases {
         }
     }
 
+    public void setupRequestFriendDB(ConnectionSource connectionSource) {
+        RequestFriendDBMapper = null;
+        try {
+            RequestFriendDBMapper = DaoManager.createDao(connectionSource, RequestFriendDB.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setupAllTables(ConnectionSource connectionSource) {
         try {
             TableUtils.createTableIfNotExists(connectionSource, UserDB.class);
@@ -76,6 +88,11 @@ public class SetupDatabases {
         }
         try {
             TableUtils.createTableIfNotExists(connectionSource, MailDB.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            TableUtils.createTableIfNotExists(connectionSource, RequestFriendDB.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }

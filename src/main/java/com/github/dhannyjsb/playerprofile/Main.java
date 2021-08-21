@@ -55,6 +55,7 @@ public final class Main extends JavaPlugin {
         new SetupDatabases().setupUserDB(connectionSource);
         new SetupDatabases().setupFriendDB(connectionSource);
         new SetupDatabases().setupMailDB(connectionSource);
+        new SetupDatabases().setupRequestFriendDB(connectionSource);
         new SetupDatabases().setupAllTables(connectionSource);
 
         // register command

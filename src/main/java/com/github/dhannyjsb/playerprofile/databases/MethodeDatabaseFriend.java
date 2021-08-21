@@ -1,5 +1,6 @@
 package com.github.dhannyjsb.playerprofile.databases;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -19,6 +20,7 @@ public class MethodeDatabaseFriend {
         } catch (SQLException e) {
             //
         }
+        Bukkit.getLogger().severe(String.valueOf(query));
         return query != null;
     }
 }
